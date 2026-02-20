@@ -1,26 +1,43 @@
-"""
-Trivia-quiz
-"""
-
 import random
+import json
+import os
 
+# שם הקובץ שבו נשמרים הנתונים
+DATA_FILE = "trivia_data.json"
 
-accounts_lst = []
-password_lst = []
-points_lst = []
+# טעינת הנתונים אם הקובץ קיים
+if os.path.exists(DATA_FILE):
+    with open(DATA_FILE, "r") as f:
+        data = json.load(f)
+        accounts_lst = data.get("accounts", [])
+        password_lst = data.get("passwords", [])
+        points_lst = data.get("points", [])
+else:
+    accounts_lst = []
+    password_lst = []
+    points_lst = []
 
-def show_points(name , points): #הדפסת הנקודות
-    for i in range (len(accounts_lst)):
+# פונקציה לשמירת הנתונים לקובץ
+def save_data():
+    with open(DATA_FILE, "w") as f:
+        json.dump({
+            "accounts": accounts_lst,
+            "passwords": password_lst,
+            "points": points_lst
+        }, f)
+
+# פונקציות המשחק נשארות כפי שהן
+def show_points(name , points):
+    for i in range(len(accounts_lst)):
         if name == accounts_lst[i]:
             break
-    print(f"Hi {name} your points count is:{points_lst[i]}")
+    print(f"Hi {name} your points count is: {points_lst[i]}")
     return 0
 
-
-def game(accounts_lst, name ,points_lst): #המשחק טריוויה
+def game(accounts_lst, name ,points_lst):
     index = chack_index(accounts_lst, name ,points_lst)
     points = points_lst[index]
-    questions = [ #שאלות
+    questions = [
         ("כמה זה 2+2?", "4"),
         ("בירת ישראל?", "ירושלים"),
         ("כמה ימים יש בשבוע?", "7"),
@@ -80,119 +97,100 @@ def game(accounts_lst, name ,points_lst): #המשחק טריוויה
         ("מהו המטבע של ארצות הברית?", "דולר"),
     ]
     while True:
-        random_num = random.randint(0, len(questions) - 1) #מספר רנדומלי לשאלה
-        print("the question is", questions[(random_num)] [0]) #הדפסת שאלה
+        if not questions:
+            print("No more questions!")
+            break
+        random_num = random.randint(0, len(questions) - 1)
+        print("the question is", questions[random_num][0])
         answer = input("Enter your answer: ")
-        if answer == questions[random_num][1]: #בדיקת תשובה עם התשובה האמיתית
+        if answer == questions[random_num][1]:
             points += 1
             print("your answer is right")
-
-
         else:
-            print("the answer real is",questions[random_num][1] )#הדפסת תשובה
+            print("the answer real is", questions[random_num][1])
+        questions.pop(random_num)
+        play = input("Do you want to exit? (y/n)")
+        if play.lower() == "y":
+            points_lst[index] = points
+            save_data()  # שמירה אחרי המשחק
+            return points_lst
 
-        questions.remove(questions[random_num])
-        while True:
-            play = input("do you want to play again? (y/n)")
-            if play.lower() == "y":
-                continue
-            elif play.lower() != "n": #בדיקת קלט לא נכון
-                print("wrong input")
-            else: #יציאה מהמשחק
-                points_lst.append(points)
-                return points_lst
-
-def chack_index(accounts_lst, name , points_lst): #בדיקת אינדקס
+def chack_index(accounts_lst, name , points_lst):
     for i in range(len(accounts_lst)):
         if name == accounts_lst[i]:
             break
     return i
 
-
-def Trivia_quiz_menu(name , password , points_lst , accounts_lst): #menu של הטריויה
-    print(f"hi {name} you now in the game menu have fun")
+def Trivia_quiz_menu(name , password , points_lst , accounts_lst):
+    print(f"hi {name} you now in the game menu, have fun")
     while True:
-        choice = input("Enter your choice: \n1-Enter game \n 2-show points \n 3-exit")
+        choice = input("Enter your choice: \n1-Enter game \n2-show points \n3-exit\n")
         if choice == '1':
             points_lst = game(accounts_lst, name ,points_lst)
-
-        if choice == '2':
+        elif choice == '2':
             if len(points_lst) == 0:
                 print("you have no points")
             else:
                 i = chack_index(accounts_lst, name , points_lst)
-                show_points(name , points_lst [i])
-
-        if choice == '3':
-            print("Thank you for playing \nbye bye")
+                show_points(name , points_lst[i])
+        elif choice == '3':
+            print("Thank you for playing")
             break
     return points_lst
 
-def login(account_lst, password_lst): #כניסה לחשבון
+def login(accounts_lst, password_lst):
     name = input('Please enter your username: ')
-    if name == None:
-        print("wrong username")
-        return 0 , 0 , 0
-
     if name not in accounts_lst:
         print("Username not in the system\n try logging in")
         return 0, 0, 0
     password = input('Please enter your password: ')
-
-    if password == None:
-        print("wrong password")
-        return 0, 0, 0
-
     if password not in password_lst:
         print("password not in the system")
         return 0, 0, 0
+    return 1, name, password
 
+def register(accounts_lst, password_lst ,points_lst):
+    while True:
+        name = input('Please enter your username: ')
+        if not name:
+            print("wrong username")
+            continue
+        if name in accounts_lst:
+            print("username already taken")
+            continue
+        break  # עבר את כל הבדיקות
 
-    return 1 , name , password
+    while True:
+        password = input('Please enter your password: ')
+        if not password:
+            print("wrong password")
+            continue
+        if password in password_lst:
+            print("password already taken")
+            continue
+        break  # עבר את כל הבדיקות
 
-
-def register(accounts_lst, password_lst ,points_lst): #התחברות למשתמש
-    name = input('Please enter your username: ')
-    if name == None:
-        print("wrong username")
-        return 0 , 0
-
-    if name in accounts_lst:
-        print("username already taken")
-        return 0 , 0
-
-    password = input('Please enter your password: ')
-
-    if password == None:
-        print("wrong password")
-        return 0 , 0
-
-    if password in password_lst:
-        print("password already taken")
-        return 0 , 0
-
+    # רק עכשיו מוסיפים ושומרים
     accounts_lst.append(name)
     password_lst.append(password)
     points_lst.append(0)
+    save_data()  # שמירה רק אחרי שכל הקלט תקין
 
-    return accounts_lst, password_lst
+    print("Registration successful!")
+    return accounts_lst, password_lst, points_lst
 
-
-def menu(accounts_lst, password_lst , points_lst): #menu התחברות
+def menu(accounts_lst, password_lst , points_lst):
     while True:
-        choice = input("Enter your choice: \n1-new account \n 2-login \n 3-exit")
+        choice = input("Enter your choice: \n1-new account \n2-login \n3-exit\n")
         if choice == '1':
             register(accounts_lst , password_lst , points_lst )
-        if choice == '2':
-            get , name , password = login(accounts_lst, password_lst)
+        elif choice == '2':
+            get, name, password = login(accounts_lst, password_lst)
             if get == 1:
                 Trivia_quiz_menu(name ,password , points_lst , accounts_lst)
-        if choice == '3':
+        elif choice == '3':
             print("Thank you for using this program")
             break
-
-
-
 
 def main(accounts_lst , password_lst , points_lst):
     print("Welcome to the Trivia-quiz")
