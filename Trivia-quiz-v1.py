@@ -1,3 +1,6 @@
+""""
+Trivia-quiz
+"""
 import random
 import json
 import os
