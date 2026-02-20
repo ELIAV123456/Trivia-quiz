@@ -29,6 +29,33 @@ def save_data():
             "points": points_lst
         }, f)
 
+def scoreboard(accounts_lst , points_lst):
+    if len(accounts_lst) == 0:
+        print("No players yet")
+        return 0
+
+    # יוצרים עותק זמני כדי לא לשנות את הרשימות המקוריות
+    temp_accounts = accounts_lst.copy()
+    temp_points = points_lst.copy()
+
+    print("************* SCOREBOARD *************")
+
+    while temp_accounts: #תמשיך עם הלולאה עד שהרשימה ריקה
+        # מוצאים את השחקן עם הכי הרבה נקודות
+        max_index = 0
+        for i in range(1, len(temp_points)):
+            if temp_points[i] > temp_points[max_index]:
+                max_index = i
+
+        # מדפיסים את השחקן
+        print(f"name: {temp_accounts[max_index]} , score: {temp_points[max_index]}")
+
+        # מסירים אותו מהרשימות הזמניות
+        temp_accounts.pop(max_index)
+        temp_points.pop(max_index)
+
+    return 0
+
 # פונקציות המשחק נשארות כפי שהן
 def show_points(name , points):
     for i in range(len(accounts_lst)):
@@ -127,7 +154,7 @@ def chack_index(accounts_lst, name , points_lst):
 def Trivia_quiz_menu(name , password , points_lst , accounts_lst):
     print(f"hi {name} you now in the game menu, have fun")
     while True:
-        choice = input("Enter your choice: \n1-Enter game \n2-show points \n3-exit\n")
+        choice = input("Enter your choice: \n1-Enter game \n2-show points \n3-show Scoreboard \n4-exit")
         if choice == '1':
             points_lst = game(accounts_lst, name ,points_lst)
         elif choice == '2':
@@ -137,6 +164,8 @@ def Trivia_quiz_menu(name , password , points_lst , accounts_lst):
                 i = chack_index(accounts_lst, name , points_lst)
                 show_points(name , points_lst[i])
         elif choice == '3':
+            scoreboard(accounts_lst , points_lst)
+        elif choice == '4':
             print("Thank you for playing")
             break
     return points_lst
