@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b3002a2-5f39-4949-b833-325f448341a8" name="Changes" comment="test">
+      <change afterPath="$PROJECT_DIR$/trivia_data.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trivia-quiz-v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Trivia-quiz-v1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Trivia-quiz-v1.py" beforeDir="false" afterPath="$PROJECT_DIR$/Trivia-quiz.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,6 +59,7 @@
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.Trivia-quiz-v1.executor": "Run",
+    "Python.Trivia-quiz.executor": "Run",
     "Python.bold or not.executor": "Run",
     "Python.code v2.executor": "Run",
     "Python.code.executor": "Run",

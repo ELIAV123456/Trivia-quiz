@@ -34,7 +34,7 @@ def scoreboard(accounts_lst , points_lst):
         print("No players yet")
         return 0
 
-    # יוצרים עותק זמני כדי לא לשנות את הרשימות המקוריות
+    # עותק זמני כדי לא לשנות את הרשימות המקוריות
     temp_accounts = accounts_lst.copy()
     temp_points = points_lst.copy()
 
