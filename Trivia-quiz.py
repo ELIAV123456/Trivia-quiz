@@ -27,15 +27,13 @@ def save_data():
         }, f)
 
 # פונקציות המשחק נשארות כפי שהן
-def show_points(name , points):
-    for i in range(len(accounts_lst)):
-        if name == accounts_lst[i]:
-            break
-    print(f"Hi {name} your points count is: {points_lst[i]}")
+def show_points(name , points_lst):
+    index = accounts_lst.index(name)
+    print(f"Hi {name} your points count is: {points_lst[index]}")
     return 0
 
 def game(accounts_lst, name ,points_lst):
-    index = chack_index(accounts_lst, name ,points_lst)
+    index = accounts_lst.index(name)
     points = points_lst[index]
     questions = [
         ("כמה זה 2+2?", "4"),
@@ -101,8 +99,8 @@ def game(accounts_lst, name ,points_lst):
             print("No more questions!")
             break
         random_num = random.randint(0, len(questions) - 1)
-        print("the question is", questions[random_num][0])
-        answer = input("Enter your answer: ")
+        print("the question is", questions[random_num][0],"תשובות בעברית בלבד!!!")
+        answer = input("Enter your answer: ").strip()
         if answer == questions[random_num][1]:
             points += 1
             print("your answer is right")
@@ -115,12 +113,6 @@ def game(accounts_lst, name ,points_lst):
             save_data()  # שמירה אחרי המשחק
             return points_lst
 
-def chack_index(accounts_lst, name , points_lst):
-    for i in range(len(accounts_lst)):
-        if name == accounts_lst[i]:
-            break
-    return i
-
 def Trivia_quiz_menu(name , password , points_lst , accounts_lst):
     print(f"hi {name} you now in the game menu, have fun")
     while True:
@@ -131,8 +123,7 @@ def Trivia_quiz_menu(name , password , points_lst , accounts_lst):
             if len(points_lst) == 0:
                 print("you have no points")
             else:
-                i = chack_index(accounts_lst, name , points_lst)
-                show_points(name , points_lst[i])
+                show_points(name , points_lst)
         elif choice == '3':
             print("Thank you for playing")
             break
@@ -146,6 +137,9 @@ def login(accounts_lst, password_lst):
     password = input('Please enter your password: ')
     if password not in password_lst:
         print("password not in the system")
+        return 0, 0, 0
+    if password.index(name) != accounts_lst.index(name):
+        print("Not your password")
         return 0, 0, 0
     return 1, name, password
 
