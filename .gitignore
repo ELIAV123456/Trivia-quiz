@@ -1,0 +1,14 @@
+﻿.env
+*.json
+*.txt
+*.apk
+*.zip
+*.ico
+.ai/
+.idea/
+__pycache__/
+.env/
+*.spec
+*.iml
+Quiz-app/
+!requirements.txt
